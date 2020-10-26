@@ -29,7 +29,7 @@ public abstract class BaseModel<ID> implements Serializable {
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
-    protected Date createdAt;
+    protected Date createdAt = new Date();
 
     @Column
     @LastModifiedBy

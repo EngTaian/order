@@ -26,26 +26,17 @@ import java.util.List;
 @RequestMapping("/order/api/{dealerId}")
 public class OrderController extends BaseController<OrderService, Order, OrderDto> {
 
-    @Autowired
-    ObjectMapper objectMapper;
-
-    @ApiOperation("Update order status")
-    @PutMapping("/{id}/status")
-    public ResponseEntity updateOrderStatus(@PathVariable Long dealerId,
-                                            @PathVariable Long id,
-                                            @RequestParam OrderStatus orderStatus){
+    @Override
+    public ResponseEntity createElement(OrderDto orderDto){
         try {
-            this.service.validateOrderAccess(id, dealerId);
-            Order order = this.service.updateStatus(id, orderStatus);
-            ObjectNode objectNode = objectMapper.createObjectNode();
-            objectNode.put("id", order.getId());
-            return ResponseEntity.ok(objectNode);
-        }catch (InvalidAccessException iv){
-            log.error(iv.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(iv.getMessage());
+            Order order = this.service.createElement(convertToModel(orderDto));
+            ObjectNode response= objectMapper.createObjectNode();
+            response.put("bar_code", order.getCode());
+            response.put("date_due", order.getDateDue().toString());
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         }catch (Exception ex){
-            log.error("Error during update order status");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during update order status");
+            log.error("Error during creating order");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during creating order");
         }
     }
 
@@ -55,14 +46,10 @@ public class OrderController extends BaseController<OrderService, Order, OrderDt
                                               @PathVariable Long id,
                                               @RequestParam PaymentStatus paymentStatus){
         try {
-            this.service.validateOrderAccess(id, dealerId);
             Order order = this.service.updatePaymentStatus(id, paymentStatus);
             ObjectNode objectNode = objectMapper.createObjectNode();
             objectNode.put("id", order.getId());
             return ResponseEntity.ok(objectNode);
-        }catch (InvalidAccessException iv){
-            log.error(iv.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(iv.getMessage());
         }catch (Exception ex){
             log.error("Error during update payment status");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during update payment status");

@@ -1,27 +1,30 @@
 package br.com.taian.order.model;
 
-import br.com.taian.order.enumeration.OrderStatus;
 import br.com.taian.order.enumeration.PaymentStatus;
 import br.com.taian.order.util.GeneratorIdentifierEntity;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
+@Table(name="payment_order")
 @Data
-@Table(name="order")
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @EntityListeners({AuditingEntityListener.class})
 public class Order extends GeneratorIdentifierEntity<Long> implements Serializable {
+
+    @NotNull
+    @Column
+    private Long dealId;
 
     @NotNull
     @Column
@@ -38,5 +41,9 @@ public class Order extends GeneratorIdentifierEntity<Long> implements Serializab
     @Column
     private PaymentStatus paymentStatus = PaymentStatus.PAYMENT_WAITING;
 
+    @Column
     private String code;
+
+    @Column
+    private Date dateDue;
 }

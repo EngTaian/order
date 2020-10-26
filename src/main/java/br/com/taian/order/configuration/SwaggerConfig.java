@@ -18,14 +18,14 @@ public class SwaggerConfig {
     @Bean
     public Docket api10() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("usersite-api-1.0")
+                .groupName("order-api-1.0")
                 .genericModelSubstitutes(ResponseEntity.class)
                 .ignoredParameterTypes(Pageable.class)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("br.com.taian.usersite.controller"))
+                .apis(RequestHandlerSelectors.basePackage("br.com.taian.order.controller"))
                 .paths(PathSelectors.any())
                 .build()
-                .apiInfo(new ApiInfoBuilder().version("1.0").title("Usersite API").description("Documentation API v1.0").build());
+                .apiInfo(new ApiInfoBuilder().version("1.0").title("Order API").description("Documentation API v1.0").build());
     }
 
 
